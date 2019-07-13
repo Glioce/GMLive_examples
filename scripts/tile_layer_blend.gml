@@ -1,6 +1,8 @@
 /// tile_layer_blend( depth, tileWidth, tileHeight, color );
 /*                    0      1          2           3
-Estable el color de una capa de tiles.
+Establece el color de una capa de tiles.
+Autor: klm
+Versión: :GM8: :GMS:
 
 Argumentos | Descripción
 ---------------------------------------------
