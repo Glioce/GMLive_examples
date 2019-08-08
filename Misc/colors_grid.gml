@@ -1,3 +1,8 @@
+/******************************************************
+En este ejemplo se muestra cómo obtener objetos
+aleatorios de una lista y dibujarlos en una cuadrícula
+*************************************************** **/
+
 // Create
 randomize();
 
