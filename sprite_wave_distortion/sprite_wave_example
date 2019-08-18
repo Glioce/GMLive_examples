@@ -1,0 +1,82 @@
+// Cargar background
+bg = background_add(
+    "https://raw.githubusercontent.com/Glioce/GMLive_examples/master/blend_modes/bg.jpg",
+    false, false
+);
+
+// Cargar sprite
+sp = sprite_add(
+    "https://raw.githubusercontent.com/Glioce/GMLive_examples/master/blend_modes/bg.jpg",
+    1, false, false, 0, 0
+);
+
+phase = 0;
+delta = 0.01;
+
+#define step
+phase += delta;
+if (phase >= 1) phase -= 1;
+
+#define draw
+//draw_sprite(sp, 0, 0, 0);
+//draw_sprite_wave_h(sp,0, 0,0, phase, 5, 50);
+//draw_bg_wave_h(bg, 0,0, phase, 5, 50);
+draw_bg_wave_v(bg, 0,0, phase, 10, 70);
+
+
+#define draw_sprite_wave_h
+/// draw_sprite_wave_h(spr, subimg, x, y, phase, amplitude, wavelength);
+
+var _x, _y, p, a, wl, w, h, angle, i;
+_x = argument2; //x position
+_y = argument3; //y position
+p  = argument4; //phase (0.0 - 1.0)
+a  = argument5; //amplitude (pixels)
+wl = argument6; //wavelength (pixels)
+w  = sprite_get_width(argument0); //width
+h  = sprite_get_height(argument0); //height
+
+for (i = 0; i < h; i += 1)
+{
+  angle = (p + (i / wl)) * 2*pi;
+  draw_sprite_part(argument0, argument1, 0, i, w, 1,
+  sin(angle) * a + _x, i + _y);
+}
+
+#define draw_bg_wave_h
+/// draw_bg_wave_h(bg, subimg, x, y, phase, amplitude, wavelength);
+
+var _x = argument1; //x position
+var _y = argument2; //y position
+var p  = argument3; //phase (0.0 - 1.0)
+var a  = argument4; //amplitude (pixels)
+var wl = argument5; //wavelength (pixels)
+var w  = background_get_width(argument0); //width
+var h  = background_get_height(argument0); //height
+var angle;
+
+for (var i = 0; i < h; i += 1)
+{
+  angle = (p + (i / wl)) * 2*pi;
+  draw_background_part(argument0, 0, i, w, 1,
+  sin(angle) * a + _x, i + _y);
+}
+
+#define draw_bg_wave_v
+/// draw_bg_wave_v(bg, subimg, x, y, phase, amplitude, wavelength);
+
+var _x = argument1; //x position
+var _y = argument2; //y position
+var p  = argument3; //phase (0.0 - 1.0)
+var a  = argument4; //amplitude (pixels)
+var wl = argument5; //wavelength (pixels)
+var w  = background_get_width(argument0); //width
+var h  = background_get_height(argument0); //height
+var angle;
+
+for (var i = 0; i < w; i += 1)
+{
+  angle = (p + (i / wl)) * 2*pi;
+  draw_background_part(argument0, i, 0, 1, h,
+  i + _x, sin(angle) * a + _y);
+}
