@@ -1,1 +1,1 @@
-Distortion sprites as sine wave
+Sine wave sprite distortion
