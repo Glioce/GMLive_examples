@@ -2,7 +2,7 @@
 Esta competencia se realizó por pirmera vez a finales de 2008. Esta es la segunda edición realizada a principios de 2020.
 La  IA controlar un personaje plataformero que debe llegar a la meta.
 
-# Ideas para la programación
+## Ideas para la programación
 La primera parte es implementar el algoritmo A* para encontrar el camino más corto.
 El resultado se va a modificar o se va a utilizar una heurística especial para que el camino esté pegado 
 al piso y se eliminen las rutas con movimientos imposibles de realizar. Los movimientos imposibles son:
