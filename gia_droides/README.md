@@ -10,6 +10,7 @@ al piso y se eliminen las rutas con movimientos imposibles de realizar. Los movi
 + Saltos muy largos (por ejemplo saltar sobre muchos obstáculos y enemigos)
 + Saltos muy altos (pararse sobre una plataforma que es imposble de alcanzar)
 + Avanzar muy rápido
++ Moverse horizontalmente sobre un precipicio
 
 Al obtener el camino con A*, la IA siempre sabe hacia dónde caminar
 **¿Cómo eliminar los nodos que ya se alcanzaron?**
