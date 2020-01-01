@@ -17,6 +17,9 @@ Al obtener el camino con A*, la IA siempre sabe hacia dónde caminar
 Cuando el personaje sigue los nodos en la ruta indicada, los nodos alcanzados se eliminan
 si el personaje se encuentra a distancia corta o colisiona con los nodos.
 
+## A* Modificado
+Los nodos válidos son los que se encuentran sobre las plataformas. Primero se debe generar la matriz de bloques plataformas. En otra matriz se insertarán los nodos para navegar. Se recorre la matriz de bloques, si se encuentra un bloque se crean 3 nodos encima, solo si es una celda válida (está dentro de la matriz, no hay otro bloque en esa posición y no se ha creado otro nodo previamente).
+
 Los movmientos precisos en cada zona se realizan con la verdadera IA. La IA puede ser de dos formas:
 
 1. **Red neuronal.** La red toma como entrada un conjunto de bloques alrededor del personaje y 
