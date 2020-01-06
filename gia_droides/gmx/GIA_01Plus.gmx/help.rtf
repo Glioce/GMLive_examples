@@ -1,0 +1,103 @@
+{\rtf1\ansi\ansicpg1252\deff0\deflang3082{\fonttbl{\f0\fswiss\fprq2\fcharset0 Arial;}{\f1\fnil\fcharset0 Arial;}}
+{\colortbl ;\red0\green0\blue0;\red128\green0\blue0;\red0\green0\blue255;\red255\green0\blue0;}
+\viewkind4\uc1\pard\qc\cf1\lang2058\ul\b\f0\fs48 Bases de Guerra de IAs\par
+\pard\ulnone\b0\fs24 v1.2\b\par
+\par
+\ul\fs28 GIA, Concepto de juego\par
+\ulnone\fs24\par
+   GIA, tambi\'e9n conocido como "Guerra de IAs" tiene como concepto b\'e1sico ser un concurso en donde los participantes deber\'e1n generar una IA (inteligencia artificial) que competir\'e1 mano a mano con IAs realizadas por otros participantes. Las IAs ser\'e1n realizadas para una situaci\'f3n espec\'edfica que variar\'e1 seg\'fan el tema y reglamento de la edici\'f3n.\par
+   Los t\'edtulos de "Campe\'f3n" pueden ir rotando, lo que significa que una vez haya un campe\'f3n puede aparecer una nueva IA o incluso alguna anterior mejorada y derrocar al campe\'f3n coron\'e1ndose como la actual IA campeona hasta que alguien la destrone nuevamente.\par
+   Tambi\'e9n habr\'e1 plazos estipulados (ej: 1-2 semanas) para derrocar al actual campe\'f3n. Si en ese lapso no se realizan derrocamientos la IA campeona de ese momento ser\'e1 declarada la campeona definitiva dando paso a una segunda etapa del proyecto.\par
+   Esta segunda etapa consistir\'e1 en la liberaci\'f3n del c\'f3digo de fuente de las IAs generadas hasta el momento de modo que se puedan utilizar para realizar aun una mejor IA y adem\'e1s sirvan de material  para novatos ya que los participantes deber\'e1n llevar un registro de como trabaja y piensa su IA, pero esto se detallar\'e1 mas adelante.\par
+\par
+  Vamos a dar un ejemplo:\par
+  "Supongamos que el tema seleccionado para la edici\'f3n es "Carrera de Autos", en ese caso la IA campeona seria la que llegue en primer lugar."\par
+   Pero como se dijo antes, abra un plazo en donde los dem\'e1s participantes podr\'e1n intentar derrocar a la IA Campeona. Y as\'ed sucesivamente hasta que se declare una IA definitiva.\par
+  Luego de ello todos los registros de los participantes con sus respectivas IAs serian liberadas a modo de fomentar el aprendizaje por medio de una competencia.\par
+  En este momento se podr\'e1n seguir mejorando las IAs a partir de los c\'f3digos ya liberados. Aunque la Campeona ya haya sido declarada como oficial Campeona eterna, eso no quita que pueda ser superada una vez que se liberen los c\'f3digos.\par
+\par
+   Para hacer las IAs los participantes van a trabajar sobre un editable ya dise\'f1ado con el engine del tema. Los participantes solo van a tener la capacidad de trabajar (picar c\'f3digo) sobre un solo objeto que ser\'e1 el del Droide que va a representar a su jugador. Luego, el encargado del concurso juntar\'e1 todo en otro editable.\par
+\par
+\par
+\par
+\ul\fs28 Reglamento General:\par
+\ulnone\fs24\par
+   Los movimientos o "cosas" que puede hacer la IA, van a estar determinadas por unos scripts a los que van a tener que llamar. Cuando por ejemplo quieran "moverse a la derecha" har\'e1n un llamado que dir\'e1 move(left) por poner un ejemplo.\par
+\par
+   Dentro de las cosas que podr\'e1n programar sobre la IA hay ciertas reglas que deben seguir:\par
+1- Solo se trabaja sobre el objeto de la IA.\par
+2- No se pueden modificar variables existentes, solo chequearlas.\par
+3- Se pueden crear variables locales en la instancia y modificarlas, excepto las ya existentes (x,y por ejemplo).\par
+4- No se puede hacer uso del evento draw.\par
+5- No se pueden crear otras instancias.\par
+6- Si se crean scripts deber\'e1n llevar el nombre de scr_nombredeljuegador_nombredelscript-\par
+7- El plazo para desbancar a un Campe\'f3n es de entre 1-2 semanas a partir de que ese Campe\'f3n tomo el puesto.\par
+8- Abra un lapso de al menos 3 d\'edas entre cada IA enviada.\par
+9- No se puede hacer la IA para un room especifico, debe ser capaz que funcionar bien en cualquier ambiente. \cf2 Ej: if room=x \{blabla\} NO\cf1\par
+10- Si una IA relentiza demasiado el juego el juez puede optar por no validarla.\par
+11- Trabajar sobre hojas distintas a las que utilizan los scripts defaults que ya vienen con el editable.\par
+12- En las hojas se deber\'e1 incluir un // indicando si la hoja va antes o despu\'e9s del script default y en caso de ser varias numerarlas.\par
+13- A la hora de enviar el editable modificarle el nombre agreg\'e1ndole un _nombre del participante al final del mismo.\par
+\par
+   Este tipo de acciones invalidaran a las IAs, y en caso de ser groseras como querer Cerrar el juego (como algo muy obvio) podr\'eda sancionarse al jugador invalid\'e1ndolo a presentar mas IAs.\par
+\cf2\par
+   Esto no es una regla, pero es recomendable que mientras participan no liberen el c\'f3digo cosa de que cada jugador tome distintos rumbos que es donde toma gracia el concurso.\par
+\cf1\par
+\par
+\ul\fs28 Registro de las IAs:\par
+\par
+\ulnone\fs24    Los jugadores deber\'e1n hacer un seguimiento de los problemas que les fueron surgiendo en el desarrollo de sus IAs, tanto los planes que fueron cambiando de rumbo como las dificultades a lo largo de los niveles.\par
+\par
+Deber\'e1n ponerlo con un // en el evento create del objeto IA.\par
+\par
+El Evento Create estar\'e1 conformado de 3 partes:\par
+\par
+\pard\fi360 La 1er hoja default con el script scr_create();\par
+\pard\li360 La 2da hoja con el registro;\par
+\pard\fi360 La 3er hoja con los c\'f3digos propios de la IA;\par
+\pard\par
+Haciendo referencia a la Hoja 2, deber\'e1 estar compuesta por:\par
+\par
+\ul DATOS de la IA.\par
+\par
+\ulnone    Tambi\'e9n deber\'edan agregar la fecha de inicio y finalizaci\'f3n de la IA m\'e1s el nombre del creador.\par
+\ul\par
+Explicaci\'f3n de como piensa la IA.\par
+\ulnone  Ej:\par
+-Primero aberiguo la direcci\'f3n en la que se encuentra la meta\par
+-Luego chequea que no haya pozos en la direcci\'f3n a la que va.\par
+-Si los hay, calcula una distancia segura y los salta\par
+\par
+\ul Explicaci\'f3n de problemas surgidos .\par
+\ulnone Ej:\par
+El primer nivel me parec\'eda f\'e1cil se superar y de hecho lo fue, aunque aun creo que puedo mejorar mi tiempo.\par
+\par
+Respecto al segundo nivel, tuve algunos problemas con la detecci\'f3n de muros por lo que tuve que hacer cuenta atr\'e1s y cambiar algunas bases de la IA.\par
+\par
+\par
+\ul\fs28 GIA_01 La Carrera de los Droides\par
+\ulnone\fs24\par
+   \'c9sta es la primer edici\'f3n de GIA que consiste en una carrera de Droides (llamaremos as\'ed a las IAs) a lo largo de una serie de niveles estilo plataforma en vista lateral. Los niveles ir\'e1n en incremento de dificultad empezando con lo b\'e1sico (por ejemplo saltar pozos), hasta aprender a utilizar trampolines o cosas mas complejas.\par
+   Para definir las posiciones se ideo un sistema de puntuaciones en donde cada nivel pasado equivale a 100 puntos + el % de tiempo restante para que se acabara el tiempo. Dado que en cada nivel hay un lapso de 60 segundos para completarlo.\par
+   Este m\'e9todo implica que lo mas importante es idear la forma de pasar el nivel, y luego ir optimizando los tiempos poco a poco.\par
+   El hecho de no sobrevivir al nivel o no terminarlo en el tiempo dado implica que la IA pierde y esta inhabilitada a seguir por los siguientes niveles.\par
+   Los primeros 3 niveles van a ser de conocimiento publico para que sepan a que se atienen. El resto de los niveles van a ser secretos y se ir\'e1n desbloqueando a medida que alg\'fan Droide acceda a ese nivel.\par
+\par
+\par
+\par
+\ul\fs28 Especificaciones de GIA_01\par
+\par
+\par
+\ulnone\fs24 -En un .zip/rar deber\'e1n colocar el editable modificado.\par
+\par
+-Deber\'e1n incluir el sprite (16x16) de su Droide en el editable que deber\'e1 ser similar a \cf3\ul <http://img220.imageshack.us/img220/3413/63813899.png>\cf1\ulnone .\par
+\par
+-Deber\'e1n enviarlo al siguiente correo electr\'f3nico: gia.asava@gmail.com\par
+\par
+\par
+\par
+\cf4\ul El reglamento puede ser modificado sin previo aviso (igual voy a intentar avisar si es importante)\par
+\cf1\ulnone\par
+\pard\sa200\sl276\slmult1\ul KrakenHimoto\f1\fs48\par
+}
+ 

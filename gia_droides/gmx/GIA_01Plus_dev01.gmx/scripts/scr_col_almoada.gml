@@ -1,0 +1,1 @@
+vspeed=-vspeed/2;
