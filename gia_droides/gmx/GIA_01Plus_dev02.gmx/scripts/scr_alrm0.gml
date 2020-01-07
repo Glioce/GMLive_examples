@@ -1,0 +1,1 @@
+aplastado=0;
