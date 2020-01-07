@@ -72,23 +72,42 @@ spring = -3; // trampoline
 pillow = -4; // almohada
 sright = -5; // flecha derecha
 sleft  = -6; // flecha izquierda
-//spike  = -7; // not moving spikes
-tstart = -7; //este tipo tal vez no es necesario
-tgoal  = -8; //este tipo tal vez no es necesario
-aereo  = -9; //este tipo de nodo es muy importante
-// conecta con nodos en la parte de abajo y indica varias zonas de salto
+spike  = -7; // not moving spikes
+air    = -8; //este tipo de nodo es muy importante, conecta con
+             //nodos hacia abajo e indica varias zonas de salto
+             
+tstart = -9; //este tipo tal vez no es necesario
+tgoal  = -10; //este tipo tal vez no es necesario
 
 // Init grid
-// platofrms and nodes are inserted in the same grid
+/*
+Platofrms and nodes are inserted in the same grid.
+Asignar valores a las celdas por cada tipo de bloque
+*/
 grid = ds_grid_create(cols, rows); //nodes grid
 for (i = 0; i &lt; cols; i++)
 for (j = 0; j &lt; rows; j++) {
     xx = i * w; //coordenadas para revisar
     yy = j * h;
-    if position_meeting(xx, yy, obj_wall)
-      ds_grid_set(grid, i, j, wall);
-    else
-      ds_grid_set(grid, i, j, empty);
+    inst = instance_position(xx, yy, obj_wall);
+    if instance_exists(inst) {
+        switch (inst.object_index) {
+            case obj_wall_nowalk:
+            case obj_wall_16x16:
+            case obj_wall: ds_grid_set(grid, i, j, wall); break;
+            case obj_trampolin: ds_grid_set(grid, i, j, spring); break;
+            case obj_almoada: ds_grid_set(grid, i, j, pillow); break;
+            case obj_sright: ds_grid_set(grid, i, j, sright); break;
+            case obj_sleft: ds_grid_set(grid, i, j, sleft); break;
+        }
+    } else ds_grid_set(grid, i, j, empty);
+    
+    // los pinchos usan máscara de colisión precisa, que raro
+    // revisar punto central del sprite
+    if position_meeting(xx+w2, yy+h2, obj_pinches) 
+    or position_meeting(xx+w2, yy+h2, obj_pinches_rev) {
+        ds_grid_set(grid, i, j, spike);
+    }
 }
 
 // Goal node
@@ -129,26 +148,52 @@ en la posición arriba-derecha. Estos nodos son de tipo aereo.
 */
 for (i = 0; i &lt; cols; i++)
 for (j = 1; j &lt; rows; j++) {
-    if (ds_grid_get(grid, i, j) == wall) {//create nodes
-        for (k = -1; k &lt;= 1; k++) {
-            xx = i + k;
-            yy = j - 1;
-            // if position is valid (within grid and empty)
-            if (xx &gt;=0 and xx &lt; cols and yy &gt;= 0 and yy &lt; rows
-            and ds_grid_get(grid, i, yy) &lt;&gt; wall
-            and ds_grid_get(grid, xx, yy) == empty) {
-                node = ds_map_create();
-                node[?"x"] = xx; //horizontal pos
-                node[?"y"] = yy; //vertical pos
-                node[?"f"] = -1; //f score not calculated
-                node[?"g"] = -1; //g score not calculated
-                node[?"from"] = -1; //came from
-                
-                node[?"ne"] = ds_list_create(); //list of neighbors
-                repeat(5) ds_list_add(node[?"ne"], -1);
-                ds_grid_set(grid, xx, yy, node); //insert in grid
-                //show_debug_message(string(node)+" "+string(xx)+" "+string(yy));
-            }
+    val = ds_grid_get(grid, i, j);
+    if (val &lt; 0 and val &lt;&gt; empty and val &lt;&gt; spike
+    and ds_grid_get(grid, i, j-1) == empty) {
+        
+        // nodo central
+        node = ds_map_create();
+        node[?"x"] = i; //horizontal pos
+        node[?"y"] = j-1; //vertical pos
+        node[?"f"] = -1; //f score not calculated
+        node[?"g"] = -1; //g score not calculated
+        node[?"from"] = -1; //came from
+        node[?"type"] = val;
+        node[?"ne"] = ds_list_create(); //list of neighbors
+        repeat(5) ds_list_add(node[?"ne"], empty);
+        ds_grid_set(grid, i, j-1, node); //insert in grid
+        
+        // nodo arriba-izquierda
+        val = ds_grid_get(grid, i-1, j);
+        if ((val == empty or val &gt;= 0 or val == spike)
+        and ds_grid_get(grid, i-1, j-1) == empty) {
+            node = ds_map_create();
+            node[?"x"] = i-1; //horizontal pos
+            node[?"y"] = j-1; //vertical pos
+            node[?"f"] = -1; //f score not calculated
+            node[?"g"] = -1; //g score not calculated
+            node[?"from"] = -1; //came from
+            node[?"type"] = air;
+            node[?"ne"] = ds_list_create(); //list of neighbors
+            repeat(5) ds_list_add(node[?"ne"], empty);
+            ds_grid_set(grid, i-1, j-1, node); //insert in grid
+        }
+        
+        // nodo arriba-derecha
+        val = ds_grid_get(grid, i+1, j);
+        if ((val == empty or val &gt;= 0 or val == spike)
+        and ds_grid_get(grid, i+1, j-1) == empty) {
+            node = ds_map_create();
+            node[?"x"] = i+1; //horizontal pos
+            node[?"y"] = j-1; //vertical pos
+            node[?"f"] = -1; //f score not calculated
+            node[?"g"] = -1; //g score not calculated
+            node[?"from"] = -1; //came from
+            node[?"type"] = air;
+            node[?"ne"] = ds_list_create(); //list of neighbors
+            repeat(5) ds_list_add(node[?"ne"], empty);
+            ds_grid_set(grid, i+1, j-1, node); //insert in grid
         }
     }
 }
@@ -164,7 +209,6 @@ for (j = 1; j &lt; rows; j++) {
 // 2: abajo
 // 3: abajo_derecha
 // 4: abajo_izquierda
-
 for (i = 0; i &lt; cols; i++)
 for (j = 0; j &lt; rows; j++) {
     node = ds_grid_get(grid, i, j);
@@ -525,9 +569,9 @@ for (j = 0; j &lt; rows; j++) {
     xx = i * w;
     yy = j * h;
     z = ds_grid_get(grid, i, j);
-    if (z == wall)
-      draw_rectangle(xx, yy, xx+4, yy+4, false);
-      //draw_text(xx, yy, "O");
+    if (z &lt; 0) draw_text(xx, yy, z);
+    //if (z == wall)
+    //draw_rectangle(xx, yy, xx+4, yy+4, false);
 }
 // g and f values
 //draw_set_color(c_black);
@@ -545,13 +589,23 @@ for (j = 0; j &lt; rows; j++) {
 }*/
 // ids de los nodos
 //draw_set_color(c_black);
-for (i = 0; i &lt; cols; i++)
+/*for (i = 0; i &lt; cols; i++)
 for (j = 0; j &lt; rows; j++) {
     z = ds_grid_get(grid, i, j);
     if (z &gt;= 0) {
         xx = i * w;
         yy = j * h;
         draw_text(xx, yy, z);
+    }
+}*/
+// tipos de nodos
+for (i = 0; i &lt; cols; i++)
+for (j = 0; j &lt; rows; j++) {
+    z = ds_grid_get(grid, i, j);
+    if (z &gt;= 0) {
+        xx = i * w;
+        yy = j * h;
+        draw_text(xx, yy, z[?"type"]);
     }
 }
 // conections to neighbors
