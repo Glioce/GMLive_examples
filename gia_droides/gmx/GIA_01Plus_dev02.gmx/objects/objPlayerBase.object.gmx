@@ -148,49 +148,49 @@ en la posición arriba-derecha. Estos nodos son de tipo aereo.
 */
 for (i = 0; i &lt; cols; i++)
 for (j = 1; j &lt; rows; j++) {
-    val = ds_grid_get(grid, i, j);
-    if (val &lt; 0 and val &lt;&gt; empty //and val &lt;&gt; spike
-    and ds_grid_get(grid, i, j-1) == empty) {
+    val = ds_grid_get(grid, i, j); //celda actual
+    if (val &lt; 0 and val &lt;&gt; empty //and val &lt;&gt; spike //es de tipo valido
+    and ds_grid_get(grid, i, j-1) == empty) {//arriba hay una celda vacía
         
         // nodo central
-        node = ds_map_create();
+        node = ds_map_create(); //crear un nuevo nodo
         node[?"x"] = i; //horizontal pos
         node[?"y"] = j-1; //vertical pos
         node[?"f"] = -1; //f score not calculated
         node[?"g"] = -1; //g score not calculated
         node[?"from"] = -1; //came from
-        node[?"type"] = val;
-        node[?"ne"] = ds_list_create(); //list of neighbors
+        node[?"type"] = val; //es del mismo tipo que el bloque de abajo
+        node[?"ne"] = ds_list_create(); //inicializar lista de vecinos
         repeat(5) ds_list_add(node[?"ne"], empty);
         ds_grid_set(grid, i, j-1, node); //insert in grid
         
         // nodo arriba-izquierda
-        val = ds_grid_get(grid, i-1, j);
-        if ((val == empty or val &gt;= 0 or val == spike)
-        and ds_grid_get(grid, i-1, j-1) == empty) {
-            node = ds_map_create();
+        val = ds_grid_get(grid, i-1, j); //celda a la izquierda
+        if ((val == empty or val &gt;= 0) //or val == spike) //hay nodo o vacía
+        and ds_grid_get(grid, i-1, j-1) == empty) {//arriba hay una celda vacía
+            node = ds_map_create(); //crear nuevo nodo
             node[?"x"] = i-1; //horizontal pos
             node[?"y"] = j-1; //vertical pos
             node[?"f"] = -1; //f score not calculated
             node[?"g"] = -1; //g score not calculated
             node[?"from"] = -1; //came from
-            node[?"type"] = air;
+            node[?"type"] = air; //es de tipo aéreo
             node[?"ne"] = ds_list_create(); //list of neighbors
             repeat(5) ds_list_add(node[?"ne"], empty);
             ds_grid_set(grid, i-1, j-1, node); //insert in grid
         }
         
         // nodo arriba-derecha
-        val = ds_grid_get(grid, i+1, j);
-        if ((val == empty or val &gt;= 0 or val == spike)
-        and ds_grid_get(grid, i+1, j-1) == empty) {
-            node = ds_map_create();
+        val = ds_grid_get(grid, i+1, j); //celda a la derecha
+        if ((val == empty or val &gt;= 0) //or val == spike) //vacía o nodo
+        and ds_grid_get(grid, i+1, j-1) == empty) {//arriba vacía
+            node = ds_map_create(); //crar nuevo nodo
             node[?"x"] = i+1; //horizontal pos
             node[?"y"] = j-1; //vertical pos
             node[?"f"] = -1; //f score not calculated
             node[?"g"] = -1; //g score not calculated
             node[?"from"] = -1; //came from
-            node[?"type"] = air;
+            node[?"type"] = air; //es de tipo aéreo
             node[?"ne"] = ds_list_create(); //list of neighbors
             repeat(5) ds_list_add(node[?"ne"], empty);
             ds_grid_set(grid, i+1, j-1, node); //insert in grid
@@ -213,7 +213,7 @@ hasta encontrar un nodo en diagonal.
 */
 for (i = 0; i &lt; cols; i++)
 for (j = 0; j &lt; rows; j++) {
-    node = ds_grid_get(grid, i, j);
+    node = ds_grid_get(grid, i, j); //nodo actual
     if (node &gt;= 0) {
         list = node[?"ne"]; //obtener la lista de vecinos
         
@@ -251,13 +251,15 @@ for (j = 0; j &lt; rows; j++) {
         // si es un bloque aéreo, buscar nodos abajo
         if (node[?"type"] == air or node == start) {
             for (yy = j+1; yy &lt; rows; yy++) {
-                val = ds_grid_get(grid, i, yy);
-                // si es un nodo que tiene un bloque debajo
-                if (val &gt;= 0 and val[?"type"] &lt;&gt; air)
+                val = ds_grid_get(grid, i, yy); //celda debajo
+                // si es un nodo que tiene un bloque debajo y no tiene un pincho
+                if (val &gt;= 0 and val[?"type"] &lt;&gt; air and val[?"type"] &lt;&gt; spike)
                 or (val == goal) {
                     list[|2] = val; //guardar vecino (abajo)
-                    l = val[?"ne"]; //obtener lista del vecino
-                    ds_list_add(l, node); //agregar nodo actual como vecino
+                    if (yy - j &lt;= 3) {//máxima altura de salto
+                        l = val[?"ne"]; //obtener lista del vecino
+                        ds_list_add(l, node); //agregar nodo actual como vecino
+                    }
                     break; //terminar ciclo
                 }
                 if (val == wall) break; //si es un bloque, también terminar ciclo
