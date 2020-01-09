@@ -149,7 +149,7 @@ en la posición arriba-derecha. Estos nodos son de tipo aereo.
 for (i = 0; i &lt; cols; i++)
 for (j = 1; j &lt; rows; j++) {
     val = ds_grid_get(grid, i, j);
-    if (val &lt; 0 and val &lt;&gt; empty and val &lt;&gt; spike
+    if (val &lt; 0 and val &lt;&gt; empty //and val &lt;&gt; spike
     and ds_grid_get(grid, i, j-1) == empty) {
         
         // nodo central
@@ -199,16 +199,18 @@ for (j = 1; j &lt; rows; j++) {
 }
 
 // Find neighbors
-// Cada nodo intenta buscar 5 vecinos.
-// Si hay un bloque debajo del nodo, solo busca nodos a los lados
-// Si no hay un bloque debajo, busca a los lados, abajo y en diagonales
-// abajo a la izquierda y abajo a la derecha. La línea puede extenderse mucho
-// hasta encontrar un nodo en diagonal.
-// 0: derecha
-// 1: izquierda
-// 2: abajo
-// 3: abajo_derecha
-// 4: abajo_izquierda
+/*
+Cada nodo intenta buscar 5 vecinos.
+Si hay un bloque debajo del nodo, solo busca nodos a los lados
+Si no hay un bloque debajo, busca a los lados, abajo y en diagonales
+abajo a la izquierda y abajo a la derecha. La línea puede extenderse mucho
+hasta encontrar un nodo en diagonal.
+0: derecha
+1: izquierda
+2: abajo
+3: abajo_derecha
+4: abajo_izquierda
+*/
 for (i = 0; i &lt; cols; i++)
 for (j = 0; j &lt; rows; j++) {
     node = ds_grid_get(grid, i, j);
@@ -246,12 +248,12 @@ for (j = 0; j &lt; rows; j++) {
             if (val == wall) break; //si es un bloque, también terminar ciclo
         }*/
         
-        // si hay un bloque debajo, no buscar vecinos abajo
-        if (ds_grid_get(grid, i, j+1) &lt;&gt; wall) {
+        // si es un bloque aéreo, buscar nodos abajo
+        if (node[?"type"] == air or node == start) {
             for (yy = j+1; yy &lt; rows; yy++) {
                 val = ds_grid_get(grid, i, yy);
                 // si es un nodo que tiene un bloque debajo
-                if (val &gt;= 0 and ds_grid_get(grid, i, yy+1) == wall)
+                if (val &gt;= 0 and val[?"type"] &lt;&gt; air)
                 or (val == goal) {
                     list[|2] = val; //guardar vecino (abajo)
                     l = val[?"ne"]; //obtener lista del vecino
@@ -558,6 +560,19 @@ ds_priority_destroy(openSet);
             <string>/// IA Torso Depurar
 /****************************************
 *****************************************/
+
+if keyboard_check_pressed(ord('0')) {
+    if (room_speed == 60) room_speed = 1000;
+    else room_speed = 60;
+}
+if keyboard_check_pressed(ord('9')) {
+    x = obj_checkpoint.x;
+    y = obj_checkpoint.y;
+    with (obj_J1) {
+        x = obj_checkpoint.x;
+        y = obj_checkpoint.y;
+    }
+}
 
 draw_set_font(fontTorsoDebug);
 
