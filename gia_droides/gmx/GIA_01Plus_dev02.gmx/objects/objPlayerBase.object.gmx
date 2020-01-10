@@ -217,7 +217,7 @@ for (j = 0; j &lt; rows; j++) {
     if (node &gt;= 0) {
         list = node[?"ne"]; //obtener la lista de vecinos
         
-        // buscar nodos a los lados
+        // buscar nodo a la derecha
 
         //show_debug_message(string(node)+" "+string(list[|0]));
         if (list[|0] &lt; 0) //si no se ha asignado vecino a la derecha
@@ -234,22 +234,12 @@ for (j = 0; j &lt; rows; j++) {
             if (val == wall) break; //si es un bloque, también terminar ciclo
         }
         
-        /*if (list[|1] &lt; 0) //si no se ha asignado vecino a la izquierda
-        // buscar vecino sin salir de la grid y hasta 6 celdas a la izquierda
-        for (xx = i-1; xx &gt;= 0 and xx &gt;= i-6; xx--) {
-            val = ds_grid_get(grid, xx, j); //valor de celda
-            if (val &gt;= 0) {//si es un nodo
-                list[|1] = val; //guardar vecino (a la izquierda)
-                l = val[?"ne"]; //obtener lista del vecino
-                l[|0] = node; //el nodo actual también es un un vecino
-                //show_debug_message("izquierda");
-                break; //terminar ciclo
-            }
-            if (val == wall) break; //si es un bloque, también terminar ciclo
-        }*/
+        // el nodo a la izquierda se asigna cuando se busca a la derecha
         
         // si es un bloque aéreo, buscar nodos abajo
         if (node[?"type"] == air or node == start) {
+            
+            // buscar verticalmente
             for (yy = j+1; yy &lt; rows; yy++) {
                 val = ds_grid_get(grid, i, yy); //celda debajo
                 // si es un nodo que tiene un bloque debajo y no tiene un pincho
@@ -264,6 +254,48 @@ for (j = 0; j &lt; rows; j++) {
                 }
                 if (val == wall) break; //si es un bloque, también terminar ciclo
             }
+            
+            // buscar abajo-derecha
+            for (yy = j+1; yy &lt; rows; yy++) {
+                val = ds_grid_get(grid, i, yy); //valor de la celda
+                if (val &lt; 0 and val &lt;&gt; empty) break; //si es un bloque, no seguir
+                for (xx = i+1; xx &lt; cols; xx++) {//si no fue un bloque, buscar a la derecha
+                    val = ds_grid_get(grid, xx, yy); //valor de la celda
+                    // si es un nodo que tiene un bloque debajo y no tiene un pincho
+                    if (val &gt;= 0 and val[?"type"] &lt;&gt; air and val[?"type"] &lt;&gt; spike)
+                    or (val == goal) {
+                        list[|3] = val; //guardar vecino (abajo)
+                        if (yy - j &lt;= 3) {//máxima altura de salto
+                            l = val[?"ne"]; //obtener lista del vecino
+                            ds_list_add(l, node); //agregar nodo actual como vecino
+                        }
+                        break; //terminar ciclo
+                    }
+                    if (val == wall) break; //si es un bloque, también terminar ciclo
+                }// for xx
+                if (list[|3] &gt;= 0) break;
+            }// for yy
+            
+            // buscar abajo-izquierda
+            for (yy = j+1; yy &lt; rows; yy++) {
+                val = ds_grid_get(grid, i, yy); //valor de la celda
+                if (val &lt; 0 and val &lt;&gt; empty) break; //si es un bloque, no seguir
+                for (xx = i-1; xx &gt;= 0; xx--) {//si no fue un bloque, buscar a la izquierda
+                    val = ds_grid_get(grid, xx, yy); //valor de la celda
+                    // si es un nodo que tiene un bloque debajo y no tiene un pincho
+                    if (val &gt;= 0 and val[?"type"] &lt;&gt; air and val[?"type"] &lt;&gt; spike)
+                    or (val == goal) {
+                        list[|4] = val; //guardar vecino (abajo)
+                        if (yy - j &lt;= 3) {//máxima altura de salto
+                            l = val[?"ne"]; //obtener lista del vecino
+                            ds_list_add(l, node); //agregar nodo actual como vecino
+                        }
+                        break; //terminar ciclo
+                    }
+                    if (val == wall) break; //si es un bloque, también terminar ciclo
+                }// for xx
+                if (list[|4] &gt;= 0) break;
+            }// for yy
         }
     }
 }
@@ -581,7 +613,7 @@ draw_set_font(fontTorsoDebug);
 // Draw grid
 // walls
 //draw_set_color(c_white);
-for (i = 0; i &lt; cols; i++)
+/*for (i = 0; i &lt; cols; i++)
 for (j = 0; j &lt; rows; j++) {
     xx = i * w;
     yy = j * h;
@@ -589,7 +621,7 @@ for (j = 0; j &lt; rows; j++) {
     if (z &lt; 0) draw_text(xx, yy, z);
     //if (z == wall)
     //draw_rectangle(xx, yy, xx+4, yy+4, false);
-}
+}*/
 // g and f values
 //draw_set_color(c_black);
 /*for (i = 0; i &lt; cols; i++)
@@ -643,8 +675,8 @@ for (j = 0; j &lt; rows; j++) {
                 x2 = (vecino[?"x"] * w) + w2;
                 y2 = (vecino[?"y"] * h) + h2;
                 a = point_direction(x1, y1, x2, y2);
-                dx = lengthdir_x(2, a+90);
-                dy = lengthdir_y(2, a+90);
+                dx = lengthdir_x(1, a+90);
+                dy = lengthdir_y(1, a+90);
                 draw_line(x1+dx, y1+dy, x2+dx, y2+dy);
                 //draw_line(x1, y1, x2, y2);
             }
