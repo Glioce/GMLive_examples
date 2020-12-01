@@ -1,6 +1,6 @@
 # GIA 01 - Carrera de Droides
 Esta competencia se realizó por pirmera vez a finales de 2008. Esta es la segunda edición realizada a principios de 2020.
-La  IA controlar un personaje plataformero que debe llegar a la meta.
+La  IA controla un personaje plataformero que debe llegar a la meta.
 
 ## Ideas para la programación
 La primera parte es implementar el algoritmo A* para encontrar el camino más corto.
